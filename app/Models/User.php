@@ -41,4 +41,14 @@ class User extends Authenticatable implements MustVerifyEmail
     protected $casts = [
         'email_verified_at' => 'datetime',
     ];
+
+    public function tokens()
+    {
+        return $this->morphMany(
+            Sanctum::$personalAccessTokenModel,
+            'tokenable',
+            'tokenable_type',
+            'uuid'
+        );
+    }
 }

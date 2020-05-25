@@ -9,82 +9,113 @@ class CreatePermissionTables extends Migration
     /**
      * Run the migrations.
      *
+     * @throws Exception When config can't be loaded
      * @return void
      */
     public function up()
     {
-        $tableNames = config('permission.table_names');
+        $tableNames  = config('permission.table_names');
         $columnNames = config('permission.column_names');
 
         if (empty($tableNames)) {
             throw new \Exception('Error: config/permission.php not loaded. Run [php artisan config:clear] and try again.');
         }
 
-        Schema::create($tableNames['permissions'], function (Blueprint $table) {
-            $table->uuid('uuid')->primary();
-            $table->string('name');
-            $table->string('guard_name');
-            $table->timestamps();
-        });
+        Schema::create($tableNames['permissions'],
+            function (Blueprint $table) {
+                $table->uuid('uuid')
+                    ->primary();
+                $table->string('name');
+                $table->string('guard_name');
+                $table->timestamps();
+            });
 
-        Schema::create($tableNames['roles'], function (Blueprint $table) {
-            $table->uuid('uuid')->primary();
-            $table->string('name');
-            $table->string('guard_name');
-            $table->timestamps();
-        });
+        Schema::create($tableNames['roles'],
+            function (Blueprint $table) {
+                $table->uuid('uuid')
+                    ->primary();
+                $table->string('name');
+                $table->string('guard_name');
+                $table->timestamps();
+            });
 
-        Schema::create($tableNames['model_has_permissions'], function (Blueprint $table) use ($tableNames, $columnNames) {
-            $table->primary('permission_uuid');
+        Schema::create($tableNames['model_has_permissions'],
+            function (Blueprint $table) use ($tableNames, $columnNames) {
+                $table->uuid('uuid');
 
-            $table->string('model_type');
-            $table->unsignedBigInteger($columnNames['model_morph_key']);
-            $table->index([$columnNames['model_morph_key'], 'model_type'], 'model_has_permissions_model_uuid_model_type_index');
+                $table->string('model_type');
+                $table->uuid($columnNames['model_morph_key']);
+                $table->index([
+                    $columnNames['model_morph_key'],
+                    'model_type',
+                ],
+                    'model_has_permissions_model_uuid_model_type_index');
 
-            $table->foreign('permission_uuid')
-                ->references('uuid')
-                ->on($tableNames['permissions'])
-                ->onDelete('cascade');
+                $table->foreign('uuid')
+                    ->references('uuid')
+                    ->on($tableNames['permissions'])
+                    ->onDelete('cascade');
 
-            $table->primary(['permission_uuid', $columnNames['model_morph_key'], 'model_type'],
+                $table->primary([
+                    'uuid',
+                    $columnNames['model_morph_key'],
+                    'model_type',
+                ],
                     'model_has_permissions_permission_model_type_primary');
-        });
+            });
 
-        Schema::create($tableNames['model_has_roles'], function (Blueprint $table) use ($tableNames, $columnNames) {
-            $table->unsignedBigInteger('role_uuid');
+        Schema::create($tableNames['model_has_roles'],
+            function (Blueprint $table) use ($tableNames, $columnNames) {
+                $table->uuid('uuid');
 
-            $table->string('model_type');
-            $table->unsignedBigInteger($columnNames['model_morph_key']);
-            $table->index([$columnNames['model_morph_key'], 'model_type'], 'model_has_roles_model_uuid_model_type_index');
+                $table->string('model_type');
+                $table->uuid($columnNames['model_morph_key']);
+                $table->index([
+                    $columnNames['model_morph_key'],
+                    'model_type',
+                ],
+                    'model_has_roles_model_uuid_model_type_index');
 
-            $table->foreign('role_uuid')
-                ->references('uuid')
-                ->on($tableNames['roles'])
-                ->onDelete('cascade');
+                $table->foreign('uuid')
+                    ->references('uuid')
+                    ->on($tableNames['roles'])
+                    ->onDelete('cascade');
 
-            $table->primary(['role_uuid', $columnNames['model_morph_key'], 'model_type'],
+                $table->primary([
+                    'uuid',
+                    $columnNames['model_morph_key'],
+                    'model_type',
+                ],
                     'model_has_roles_role_model_type_primary');
-        });
+            });
 
-        Schema::create($tableNames['role_has_permissions'], function (Blueprint $table) use ($tableNames) {
-            $table->unsignedBigInteger('permission_uuid');
-            $table->unsignedBigInteger('role_uuid');
+        Schema::create($tableNames['role_has_permissions'],
+            function (Blueprint $table) use ($tableNames) {
+                $table->uuid('uuid');
 
-            $table->foreign('permission_uuid')
-                ->references('uuid')
-                ->on($tableNames['permissions'])
-                ->onDelete('cascade');
+                $table->foreign('uuid')
+                    ->references('uuid')
+                    ->on($tableNames['permissions'])
+                    ->onDelete('cascade');
 
-            $table->foreign('role_uuid')
-                ->references('uuid')
-                ->on($tableNames['roles'])
-                ->onDelete('cascade');
+                // TODO fix the second relation
+//                $table->foreign('uuid')
+//                    ->references('uuid')
+//                    ->on($tableNames['roles'])
+//                    ->onDelete('cascade');
 
-            $table->primary(['permission_uuid', 'role_uuid'], 'role_has_permissions_permission_uuid_role_id_primary');
-        });
+                $table->primary([
+                    'uuid',
+                ],
+                    'role_has_permissions_permission_uuid_role_uuid_primary');
+            });
 
         app('cache')
-            ->store(config('permission.cache.store') != 'default' ? config('permission.cache.store') : null)
+            ->store(
+                config('permission.cache.store') != 'default'
+                    ? config('permission.cache.store')
+                    : null
+            )
             ->forget(config('permission.cache.key'));
     }
 
