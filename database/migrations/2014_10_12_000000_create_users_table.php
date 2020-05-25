@@ -18,7 +18,7 @@ class CreateUsersTable extends Migration
                 $table->uuid('uuid')
                     ->primary()
                     ->unique();
-                $table->string('name');
+                $table->string('handle');
                 $table->string('username');
                 $table->string('email')
                     ->unique();
@@ -28,6 +28,10 @@ class CreateUsersTable extends Migration
                 $table->rememberToken();
                 $table->boolean('is_active')
                     ->default(true);
+                $table->boolean('is_banned')
+                    ->default(false);
+                $table->text('ban_reason')
+                    ->nullable();
                 $table->timestamps();
                 $table->softDeletes();
             });
