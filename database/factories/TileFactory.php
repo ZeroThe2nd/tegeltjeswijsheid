@@ -2,10 +2,10 @@
 
 /** @var \Illuminate\Database\Eloquent\Factory $factory */
 
-use App\quote;
+use App\Tile;
 use Faker\Generator as Faker;
 
-$factory->define(quote::class, function (Faker $faker) {
+$factory->define(Tile::class, function (Faker $faker) {
     return [
         //
     ];

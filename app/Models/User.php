@@ -1,14 +1,13 @@
-<?php
+<?php namespace App\Models;
 
-namespace App;
-
+use App\Traits\UuidTrait;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 
-class User extends Authenticatable
+class User extends Authenticatable implements MustVerifyEmail
 {
-    use Notifiable;
+    use Notifiable, UuidTrait;
 
     /**
      * The attributes that are mass assignable.

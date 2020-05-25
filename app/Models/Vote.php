@@ -1,10 +1,11 @@
-<?php
+<?php namespace App\Models;
 
-namespace App;
-
+use App\Traits\UuidTrait;
 use Illuminate\Database\Eloquent\Model;
 
 class Vote extends Model
 {
+    use UuidTrait;
+
     //
 }
