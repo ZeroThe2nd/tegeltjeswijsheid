@@ -11,16 +11,12 @@ return [
      *
      * You can customize these query string parameters here.
      */
-    'parameters' => [
-        'include' => 'include',
-
-        'filter' => 'filter',
-
-        'sort' => 'sort',
-
-        'fields' => 'fields',
-
-        'append' => 'append',
+    'parameters'   => [
+        'include' => 'with',
+        'filter'  => 'filter',
+        'sort'    => 'sort',
+        'fields'  => 'fields',
+        'append'  => 'append',
     ],
 
     /*
@@ -28,5 +24,4 @@ return [
      * For example: GET /users?include=postsCount
      */
     'count_suffix' => 'Count',
-
 ];

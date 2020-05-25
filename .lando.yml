@@ -1,0 +1,12 @@
+name: tegeltjeswijsheid-api
+recipe: laravel
+config:
+  php: '7.4'
+  via: nginx
+  database: mariadb
+  cache: redis
+  xdebug: true
+services:
+  mail:
+    type: mailhog
+    portforward: true
