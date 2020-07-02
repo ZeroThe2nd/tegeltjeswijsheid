@@ -1,26 +1,28 @@
 <template>
-  <div id="app">
+  <div class="mainlayout">
     <div id="upperLeft" class="tilecorner">
-      <img alt="upperLeft"   src="./assets/tiles/UpperLeft.png"> 
+      <img alt="upperLeft"   src="../assets/tiles/UpperLeft.png"> 
     </div>
     <div id="upperRight" class="tilecorner">
-      <img alt="upperRight"  src="./assets/tiles/UpperRight.png">
+      <img alt="upperRight"  src="../assets/tiles/UpperRight.png">
     </div>
     <div id="lowerRight" class="tilecorner">
-      <img alt="lowerRight"  src="./assets/tiles/LowerRight.png">
+      <img alt="lowerRight"  src="../assets/tiles/LowerRight.png">
     </div>
     <div id="lowerLeft" class="tilecorner">
-      <img alt="lowerLeft"  src="./assets/tiles/LowerLeft.png"> 
+      <img alt="lowerLeft"  src="../assets/tiles/LowerLeft.png"> 
     </div>
     <div id="maincircle">
       <div class="outer">
         <div class="middle">
             <div class="inner" v-bind:class="{ 'inner-height' :widthBiggerThanHeight , 'inner-width' : !widthBiggerThanHeight }">
-              <div id="nav">
-                <router-link to="/">Home</router-link>
-                <router-link to="/login">About</router-link>
-              </div>
-              <router-view />
+                <ul>
+                    <li>
+                        <v-link href="/">Home</v-link>
+                        <v-link href="/login">Login</v-link>
+                    </li>
+                </ul>
+                <slot></slot>
             </div>
         </div>
       </div>
@@ -31,9 +33,13 @@
 <script>
 import 'bootstrap/dist/css/bootstrap.css'
 import 'bootstrap-vue/dist/bootstrap-vue.css'
+import VLink from '../components/VLink.vue'
 
 export default {
-  name: 'App',
+  name: 'MainLayout',
+  components: {
+      VLink
+  },
   data: function() {
       return {
           windowWidth: 0,
