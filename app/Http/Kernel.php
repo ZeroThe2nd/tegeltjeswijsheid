@@ -22,6 +22,9 @@ use Illuminate\Auth\Middleware\{
 };
 use Illuminate\Cookie\Middleware\AddQueuedCookiesToResponse;
 use Illuminate\Foundation\Http\Kernel as HttpKernel;
+use Laravel\Passport\Http\Middleware\CheckForAnyScope;
+use Laravel\Passport\Http\Middleware\CheckScopes;
+use Laravel\Passport\Http\Middleware\CreateFreshApiToken;
 use Illuminate\Foundation\Http\Middleware\{
     ValidatePostSize,
     ConvertEmptyStringsToNull
@@ -32,8 +35,6 @@ use Illuminate\Routing\Middleware\{
     ThrottleRequests,
     ValidateSignature
 };
-use Illuminate\Session\Middleware\StartSession;
-use Illuminate\View\Middleware\ShareErrorsFromSession;
 
 use Laravel\Sanctum\Http\Middleware\EnsureFrontendRequestsAreStateful;
 
@@ -65,11 +66,9 @@ class Kernel extends HttpKernel
         'web' => [
             EncryptCookies::class,
             AddQueuedCookiesToResponse::class,
-            StartSession::class,
             // \Illuminate\Session\Middleware\AuthenticateSession::class,
-            ShareErrorsFromSession::class,
-            VerifyCsrfToken::class,
             SubstituteBindings::class,
+            CreateFreshApiToken::class,
         ],
 
         'api' => [
@@ -94,6 +93,8 @@ class Kernel extends HttpKernel
         'can'              => Authorize::class,
         'guest'            => RedirectIfAuthenticated::class,
         'password.confirm' => RequirePassword::class,
+        'scopes'           => CheckScopes::class,
+        'scope'            => CheckForAnyScope::class,
         'signed'           => ValidateSignature::class,
         'throttle'         => ThrottleRequests::class,
         'verified'         => EnsureEmailIsVerified::class,

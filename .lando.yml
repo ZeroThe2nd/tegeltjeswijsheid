@@ -1,4 +1,4 @@
-name: tegeltjeswijsheid-api
+name: tegeltjeswijsheid
 recipe: laravel
 config:
   php: '7.4'
